@@ -1,0 +1,59 @@
+# Python bytecode files
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# Django-specific
+*.log
+*.pot
+*.pyc
+*.db
+*.sqlite3
+*.db-journal
+
+# Local configuration files
+local_settings.py
+settings_local.py
+
+# Virtualenv
+venv/
+.env/
+# You can also ignore your virtualenv directory if you create one
+# Alternatively, you can use a virtualenv from the system or in a separate location
+# .venv/
+
+# Django migrations
+*/migrations/*
+
+# Static files
+#/static/
+# The folder for user-uploaded files should be excluded if it's within the project directory
+/media/
+
+# Django secret key and other sensitive data
+*.env
+.env
+
+# IDEs and editors (e.g. VS Code, PyCharm)
+.idea/
+.vscode/
+*.swp
+
+# PyCharm specific
+*.iml
+
+# Coverage reports (if you're using coverage.py)
+.coverage
+.coverage.*
+
+# MySQL/MariaDB
+*.sql
+
+# VS Code settings
+.vscode/
+
+# User-specific files
+*.bak
+*.swp
+*.swo

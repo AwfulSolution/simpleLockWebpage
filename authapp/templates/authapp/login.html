@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+
+    <!-- Load static files -->
+    {% load static %}
+
+    <!-- Link to the CSS file -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body>
+
+    <h1>You've found the Secret Lock!</h1>
+
+    <!-- Login Form -->
+
+
+
+    <div class="container">
+        <h1>🔐 Unlock the Secret</h1>
+        <p class="instructions">Enter your name and the correct code to unlock the lock!</p>
+
+        <form id="login-form">
+            <label for="nameInput">Your Name:</label>
+            <input type="text" id="username" placeholder="Enter your name" required />
+
+            <label for="codeInput">Code:</label>
+            <input type="password" id="password" placeholder="Enter code" required />
+
+            <button id="submitButton" type="submit">Unlock</button>
+        </form>
+
+        <div id="lock" class="lock closed">🔒</div>
+        <p id="message"></p>
+    </div>
+
+
+
+    <!-- Audio elements for success and failure sounds -->
+    <audio id="successSound" src="{% static 'sounds/success.mp3' %}"></audio>
+    <audio id="failSound" src="{% static 'sounds/fail.mp3' %}"></audio>
+
+    <script>
+        $(document).ready(function () {
+            $('#login-form').on('submit', function (e) {
+                e.preventDefault();
+                var username = $('#username').val();
+                var password = $('#password').val();
+
+                $.ajax({
+                    url: "{% url 'submit_credentials' %}",
+                    type: "POST",
+                    data: {
+                        'username': username,
+                        'password': password,
+                        'csrfmiddlewaretoken': '{{ csrf_token }}'
+                    },
+                    success: function (response, textStatus, xhr) {
+                        if (xhr.status === 200) {
+                            $('#successSound')[0].play();
+                            let message = document.getElementById("message");
+                            let lock = document.getElementById("lock");
+                            message.textContent = `The lock is open.`;
+                            lock.textContent = "🔓"; // Unlock the lock
+                            lock.classList.remove("closed");
+                            lock.classList.add("open");
+                            message.classList.add("success_message")
+                            message.classList.remove("fail_message")
+                            message.classList.remove("stable_message")
+                            // alert('Success!');
+                        }
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        if (xhr.status === 400) {
+                            $('#failSound')[0].play();
+                            const message = document.getElementById("message");
+                            const lock = document.getElementById("lock");
+                            message.textContent = `Incorrect code.`;
+                            lock.textContent = "🔒"; // Keep the lock closed
+                            lock.classList.remove("open");
+                            lock.classList.add("closed");
+                            message.classList.remove("success_message")
+                            message.classList.add("fail_message")
+                            message.classList.remove("stable_message")
+                            // alert('Failure!');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+
+</html>
